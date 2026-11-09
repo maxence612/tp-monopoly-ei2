@@ -46,8 +46,55 @@ public class Plateau {
      * Remplit le plateau avec les 40 cases.
      */
     private void initPlateau() {
-        // TODO 2 : créer les 40 cases (Départ, terrains, gares, prison, chance...)
         cases.add(new CaseSpeciale("Départ"));
+        ajouterTerrain("Boulevard de Belleville", 6000, 10000, 50000, 200, 1000, 5000);
+        cases.add(new CaseSpeciale("Caisse de communauté"));
+        ajouterTerrain("Rue Lecourbe", 6000, 10000, 50000, 400, 2000, 10000);
+        cases.add(new CaseSpeciale("Impôt sur le revenu"));
+        cases.add(new Gare("Gare Montparnasse", 20000));
+        ajouterTerrain("Rue de Vaugirard", 10000, 10000, 50000, 600, 3000, 15000);
+        cases.add(new CaseSpeciale("Chance"));
+        ajouterTerrain("Rue de Courcelles", 10000, 10000, 50000, 600, 3000, 15000);
+        ajouterTerrain("Avenue de la République", 12000, 10000, 50000, 800, 4000, 20000);
+        cases.add(new CaseSpeciale("Prison / simple visite"));
+        ajouterTerrain("Boulevard de la Villette", 14000, 15000, 75000, 1000, 5000, 25000);
+        cases.add(new CaseSpeciale("Compagnie d'électricité"));
+        ajouterTerrain("Avenue de Neuilly", 14000, 15000, 75000, 1000, 5000, 25000);
+        ajouterTerrain("Rue de Paradis", 16000, 15000, 75000, 1200, 6000, 30000);
+        cases.add(new Gare("Gare de Lyon", 20000));
+        ajouterTerrain("Avenue Mozart", 18000, 15000, 75000, 1400, 7000, 35000);
+        cases.add(new CaseSpeciale("Caisse de communauté"));
+        ajouterTerrain("Boulevard Saint-Michel", 18000, 15000, 75000, 1400, 7000, 35000);
+        ajouterTerrain("Place Pigalle", 20000, 15000, 75000, 1600, 8000, 40000);
+        cases.add(new CaseSpeciale("Parc gratuit"));
+        ajouterTerrain("Avenue Matignon", 22000, 20000, 100000, 1800, 9000, 45000);
+        cases.add(new CaseSpeciale("Chance"));
+        ajouterTerrain("Boulevard Malesherbes", 22000, 20000, 100000, 1800, 9000, 45000);
+        ajouterTerrain("Avenue Henri-Martin", 24000, 20000, 100000, 2000, 10000, 50000);
+        cases.add(new Gare("Gare du Nord", 20000));
+        ajouterTerrain("Faubourg Saint-Honoré", 26000, 20000, 100000, 2200, 11000, 55000);
+        ajouterTerrain("Place de la Bourse", 26000, 20000, 100000, 2200, 11000, 55000);
+        cases.add(new CaseSpeciale("Compagnie des eaux"));
+        ajouterTerrain("Rue La Fayette", 28000, 20000, 100000, 2400, 12000, 60000);
+        cases.add(new CaseSpeciale("Allez en prison"));
+        ajouterTerrain("Avenue de Breteuil", 30000, 25000, 125000, 2600, 13000, 65000);
+        ajouterTerrain("Avenue Foch", 30000, 25000, 125000, 2600, 13000, 65000);
+        cases.add(new CaseSpeciale("Caisse de communauté"));
+        ajouterTerrain("Boulevard des Capucines", 32000, 25000, 125000, 2800, 14000, 70000);
+        cases.add(new Gare("Gare Saint-Lazare", 20000));
+        cases.add(new CaseSpeciale("Chance"));
+        ajouterTerrain("Avenue des Champs-Élysées", 35000, 25000, 125000, 3500, 17500, 87500);
+        cases.add(new CaseSpeciale("Taxe de luxe"));
+        ajouterTerrain("Rue de la Paix", 40000, 25000, 125000, 5000, 25000, 125000);
+    }
+
+    /**
+     * Ajoute un terrain avec ses prix et loyers.
+     */
+    private void ajouterTerrain(String nom, int prix, int prixMaison, int prixHotel,
+                               int loyerBase, int loyerParMaison, int loyerParHotel) {
+        cases.add(new Constructible(nom, prix, prixMaison, prixHotel,
+                loyerBase, loyerParMaison, loyerParHotel));
     }
 
     public ArrayList<Case> getCases() {
