@@ -20,8 +20,11 @@ public class Gare extends Achetable {
 
     @Override
     public int calculLoyer(Joueur visiteur) {
-        int loyer= this.getProprietaire().nbGares()*LOYER_PAR_GARE;
-        return loyer;
+        if (this.getProprietaire() == null || visiteur == this.getProprietaire()) {
+            return 0;
+        }
+        return this.getProprietaire().nbGares() * LOYER_PAR_GARE;
     }
 }
+
 
