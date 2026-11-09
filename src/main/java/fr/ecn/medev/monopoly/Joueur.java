@@ -1,91 +1,190 @@
-package fr.ecn.medev.monopoly;
+package edu.centralenantes.monopoly;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Joueur : nom, fortune, position sur le plateau et référence au plateau.
- *
- * <p>Partie 3 du sujet.</p>
+ * Classe représentant un joueur du jeu Monopoly.
  */
 public class Joueur {
 
-    /** Fortune initiale de chaque joueur. */
-    public static final int FORTUNE_INITIALE = 100000;
+    private String nom;
 
-    private final String nom;
+    private String icone;
+
     private int fortune;
-    private Case position;
-    private final Plateau plateau;
+
+    private List<Achetable> propriete;
+
+    private int position;
+
 
     /**
-     * Crée un joueur avec une fortune de {@value #FORTUNE_INITIALE}.
+     * Constructeur du joueur.
      *
-     * @param nom      nom du joueur
-     * @param position case de départ
-     * @param plateau  plateau sur lequel il joue
+     * @param nom nom du joueur
+     * @param icone icône (pion) représentant le joueur
+     * @param position position initiale du joueur sur le plateau
      */
-    public Joueur(String nom, Case position, Plateau plateau) {
+    public Joueur(String nom, String icone, int position) {
         this.nom = nom;
-        this.fortune = FORTUNE_INITIALE;
+        this.icone = icone;
         this.position = position;
-        this.plateau = plateau;
+        this.fortune = 100000;
+        this.propriete = new ArrayList<>();
     }
 
+    /**
+     * Méthode permettant de lancer le dé du jeu.
+     *
+     * @return un entier aléatoire compris entre 1 et 6 inclus
+     */
+    public static int lanceLeDe() {
+        return (int) Math.floor(Math.random() * 6) + 1;
+    }
+
+    /**
+     * Retourne le nombre de propriétés du joueur qui sont des gares.
+     *
+     * @return le nombre de gares appartenant au joueur
+     */
+    public int getNbGares() {
+        int nbGares = 0;
+        for (Achetable unePropriete : this.propriete) {
+            if (unePropriete instanceof Gare) {
+                nbGares++;
+            }
+        }
+        return nbGares;
+    }
+
+    /**
+     * Permet au joueur de payer un montant à un destinataire.
+     *
+     * @param destinataire joueur à qui le montant est transféré (peut être null)
+     * @param montant montant à payer
+     * @throws NoMoreMoney si la fortune du joueur est inférieure au montant
+     */
+    public void payer(Joueur destinataire, int montant) throws NoMoreMoney {
+        if (this.fortune < montant) {
+            throw new NoMoreMoney("Crédit insuffisant pour " + this.nom);
+        }
+        this.fortune -= montant;
+        if (destinataire != null) {
+            destinataire.setFortune(destinataire.getFortune() + montant);
+        }
+    }
+
+    /**
+     * Méthode exécutant le tour du joueur : elle lance le dé,
+     * avance le joueur sur le plateau, puis gère l'achat ou le paiement
+     * de la case se trouvant à la nouvelle position.
+     *
+     * @throws NoMoreMoney si le joueur ne dispose pas de la fortune suffisante
+     *                     pour payer le loyer de la case possédée
+     */
+    public void tourDeJeu(Plateau plateau) throws NoMoreMoney {
+        int de = lanceLeDe();
+        int nouvellePosition = plateau.avance(this.position, de);
+        System.out.println("avance de "+de+" cases");
+        this.position = nouvellePosition;
+        Case currentCase = plateau.getCase(this.position);
+        System.out.println("Le joueur " + this.nom + " est en " + currentCase.getNom() + " >>>");
+        if (currentCase instanceof Achetable) {
+            Achetable achetable = (Achetable) currentCase;
+            if (achetable.getProprietaire() == null) {
+                if (de % 2 != 0 && this.fortune >= achetable.getPrix()) {
+                    this.fortune -= achetable.getPrix();
+                    achetable.setProprietaire(this);
+                    this.propriete.add(achetable);
+                }
+            } else {
+                this.payer(achetable.getProprietaire(), achetable.getLoyer());
+            }
+        }
+    }
+
+    /**
+     * Affiche les informations complètes du joueur : nom, icône, fortune,
+     * position courante et liste des propriétés possédées.
+     */
+    public void affiche() {
+        System.out.println("Nom du joueur : " + this.nom);
+        System.out.println("Icône : " + this.icone);
+        System.out.println("Fortune : " + this.fortune + " €");
+        System.out.println("Position : " + this.position);
+        System.out.println("Propriétés possédées : " + this.propriete);
+    }
+
+    /**
+     * @return le nom du joueur
+     */
     public String getNom() {
         return nom;
     }
 
+    /**
+     * @param nom le nouveau nom du joueur
+     */
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    /**
+     * @return l'icône (pion) du joueur
+     */
+    public String getIcone() {
+        return icone;
+    }
+
+    /**
+     * @param icone le nouvel icône (pion) du joueur
+     */
+    public void setIcone(String icone) {
+        this.icone = icone;
+    }
+
+    /**
+     * @return la fortune actuelle du joueur
+     */
     public int getFortune() {
         return fortune;
     }
 
-    public Case getPosition() {
+    /**
+     * @param fortune la nouvelle fortune du joueur
+     */
+    public void setFortune(int fortune) {
+        this.fortune = fortune;
+    }
+
+    /**
+     * @return l'indice de la case courante du joueur sur le plateau
+     */
+    public int getPosition() {
         return position;
     }
 
-    public Plateau getPlateau() {
-        return plateau;
+    /**
+     * @param position le nouvel indice de case du joueur
+     */
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     /**
-     * Lance un dé à 6 faces (code fourni par le sujet).
-     *
-     * @return un entier entre 1 et 6
+     * @return la liste des propriétés possédées par le joueur
      */
-    public static int lanceLeDe() {
-        return ((int) Math.floor(Math.random() * 6)) + 1;
+    public List<Achetable> getProprietes() {
+        return propriete;
     }
 
     /**
-     * @return le nombre de gares possédées par ce joueur (3.1)
+     * @param propriete la nouvelle liste des propriétés du joueur
      */
-    public int nbGares() {
-        return plateau.nbGares(this);
+    public void setProprietes(List<Achetable> propriete) {
+        this.propriete = propriete;
     }
 
-    /**
-     * Paie la somme {@code x} au joueur {@code j} (3.2).
-     *
-     * @param x somme à payer
-     * @param j joueur bénéficiaire
-     * @throws NoMoreMoney si la fortune est insuffisante
-     */
-    public void payer(int x, Joueur j) throws NoMoreMoney {
-        // TODO 3.2
-        throw new UnsupportedOperationException("TODO 3.2 payer()");
-    }
-
-    /**
-     * Joue un tour pour ce joueur (3.3) : lance le dé, avance, affiche
-     * « Le joueur XX est en YY », achète si le dé est impair, paie le loyer.
-     *
-     * @throws NoMoreMoney si le joueur ne peut pas payer le loyer
-     */
-    public void tourDeJeu() throws NoMoreMoney {
-        // TODO 3.3
-        throw new UnsupportedOperationException("TODO 3.3 Joueur.tourDeJeu()");
-    }
-
-    @Override
-    public String toString() {
-        return nom + " (fortune : " + fortune + ")";
-    }
+    
 }
