@@ -20,8 +20,8 @@ public class Gare extends Achetable {
 
     @Override
     public int calculLoyer(Joueur visiteur) {
-        // TODO 1.3 : 0 si pas de propriétaire ou visiteur == propriétaire,
-        //            sinon LOYER_PAR_GARE * proprietaire.nbGares()
-        throw new UnsupportedOperationException("TODO 1.3 Gare.calculLoyer()");
+        int loyer= this.getProprietaire().nbGares()*LOYER_PAR_GARE;
+        return loyer;
     }
 }
+
