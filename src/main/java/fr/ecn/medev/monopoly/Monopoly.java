@@ -48,12 +48,12 @@ public class Monopoly {
         while (nbTours < LIMITE_TOURS)
         {
             Joueur joueurActuel = plateau.getJoueurs().get(joueurEnCours);
-            System.out.println("Tour " + (plateau.getNbToursJoues() + 1) + ", c'est au tour de " + joueurActuel.getNom() + " !");
+            System.out.println("Tour " + (nbTours + 1) + ", c'est au tour de " + joueurActuel.getNom() + " !");
             
-           joueurActuel.TourDeJeu(plateau);
+           joueurActuel.tourDeJeu(plateau);
            if (joueurActuel.getFortune() < 0) {
                 System.out.println(joueurActuel.getNom() + " est éliminé !");
-                plateau.supprmimerJoueur(joueurActuel);
+                plateau.supprimerJoueur(joueurActuel.getNom());
                 if (plateau.getJoueurs().size() == 1) {
                     System.out.println(plateau.getJoueurs().get(0).getNom() + " a gagné la partie !");
                     break;

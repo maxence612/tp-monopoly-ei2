@@ -99,7 +99,7 @@ public class Joueur {
                     this.propriete.add(achetable);
                 }
             } else {
-                this.payer(achetable.getProprietaire(), achetable.getLoyer());
+                this.payer(achetable.getProprietaire(), achetable.calculLoyer(this));
             }
         }
     }
