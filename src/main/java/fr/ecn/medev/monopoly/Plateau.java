@@ -54,8 +54,23 @@ public class Plateau {
         return cases;
     }
 
+    /**
+     * Renvoie la case située à l'indice indiqué.
+     *
+     * @param indice indice de la case dans le plateau
+     * @return la case à cet indice
+     * @throws IndexOutOfBoundsException si l'indice est hors des limites de la liste
+     */
+    public Case getCase(int indice) {
+        return cases.get(indice);
+    }
+
     public ArrayList<Joueur> getJoueurs() {
         return joueurs;
+    }
+
+    public int getNbToursJoues() {
+        return nbToursJoues;
     }
 
     /**
@@ -76,7 +91,37 @@ public class Plateau {
      * @param nom nom du joueur
      */
     public void ajouterJoueur(String nom) {
-        ajouterJoueur(new Joueur(nom, cases.get(0), this));
+        ajouterJoueur(new Joueur(nom, "Pion", 0));
+    }
+
+    /**
+     * Supprime un joueur et remet en vente toutes ses propriétés.
+     *
+     * @param nom nom du joueur à supprimer
+     */
+    public void supprimerJoueur(String nom) {
+        if (nom == null) {
+            throw new IllegalArgumentException("Le nom du joueur ne peut pas être null");
+        }
+
+        Joueur joueurASupprimer = null;
+        for (Joueur joueur : joueurs) {
+            if (nom.equals(joueur.getNom())) {
+                joueurASupprimer = joueur;
+                break;
+            }
+        }
+        if (joueurASupprimer == null) {
+            return;
+        }
+
+        for (Case uneCase : cases) {
+            if (uneCase instanceof Achetable achetable
+                    && joueurASupprimer.equals(achetable.getProprietaire())) {
+                achetable.liberer();
+            }
+        }
+        joueurs.remove(joueurASupprimer);
     }
 
     /**
@@ -136,35 +181,19 @@ public class Plateau {
     }
 
     /**
-     * Renvoie la case située {@code d} cases après {@code depart}, de façon circulaire (2.3).
+     * Renvoie la case située après un déplacement circulaire depuis un indice donné.
      *
-     * @param depart case de départ
-     * @param d      nombre de cases à avancer
-     * @return la case d'arrivée
+     * @param position indice de la case de départ
+     * @param deplacement nombre de cases à avancer
+     * @return l'indice de la case d'arrivée
+     * @throws IndexOutOfBoundsException si la position n'est pas un indice valide
      */
-    public Case avance(Case depart, int d) {
-        if (cases.isEmpty()) {
-            throw new IllegalStateException("Le plateau ne contient aucune case");
+    public int avance(int position, int deplacement) {
+        if (position < 0 || position >= NB_CASES) {
+            throw new IndexOutOfBoundsException("Indice de départ hors des limites du plateau : " + position);
         }
-        int position = cases.indexOf(depart);
-        if (position < 0) {
-            throw new IllegalArgumentException("La case de départ n'appartient pas à ce plateau");
-        }
-        int deplacement = Math.floorMod(d, cases.size());
-        return cases.get((position + deplacement) % cases.size());
-    }
-
-    /**
-     * Déplace un joueur du nombre de cases demandé, de façon circulaire.
-     *
-     * @param joueur joueur à déplacer
-     * @param nbCases nombre de cases à parcourir
-     */
-    public void avance(Joueur joueur, int nbCases) {
-        if (joueur == null) {
-            throw new IllegalArgumentException("Le joueur ne peut pas être null");
-        }
-        joueur.setPosition(avance(joueur.getPosition(), nbCases));
+        int deplacementNormalise = Math.floorMod(deplacement, NB_CASES);
+        return (int) (((long) position + deplacementNormalise) % NB_CASES);
     }
 
     /**
