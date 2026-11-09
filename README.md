@@ -64,4 +64,5 @@ rapport/                 # compte rendu, diagramme de classes
 
 ## Travailler à plusieurs
 
-Voir [CONTRIBUTING.md](CONTRIBUTING.md) : répartition des parties et règles Git.
+- [TACHES.md](TACHES.md) : liste des tâches à se répartir
+- [CONTRIBUTING.md](CONTRIBUTING.md) : règles Git et conventions

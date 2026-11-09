@@ -1,19 +1,10 @@
 # Organisation du groupe
 
-## Répartition proposée
+## Répartition du travail
 
-Chaque partie correspond à des `TODO` dans le code (cherchez `TODO 1.3`, `TODO 2.1`…). Mettez votre nom dans la colonne « Responsables » : ça servira directement pour la partie « contributions » du rapport.
+La liste détaillée des tâches, avec les dépendances et l'ordre conseillé, est dans **[TACHES.md](TACHES.md)**. Mettez votre nom à côté de la tâche que vous prenez : ça servira directement pour la partie « contributions » du rapport.
 
-| Partie | Contenu | Fichiers | Responsables |
-|---|---|---|---|
-| **A. Cases** (1.1–1.3) | `acheter()`, `toString()`, `calculLoyer()`, construction de maisons/hôtels | `Achetable`, `Gare`, `Constructible` | |
-| **B. Plateau** (2.1–2.3) | `initPlateau()` (40 cases), `nbGares()`, `affiche()`, `avance()` | `Plateau` | |
-| **C. Joueurs** (3.1–3.3) | `payer()` + `NoMoreMoney`, `tourDeJeu()` d'un joueur | `Joueur`, `NoMoreMoney` | |
-| **D. Partie complète** (4.1–4.3) | `finDePartie()`, affichage des joueurs, boucle de jeu, élimination + `liberer()` | `Plateau`, `Achetable`, `Constructible` | |
-| **E. Rapport** (5) | diagramme de classes, choix de conception, hypothèses, exemples d'exécution, retour d'expérience | `rapport/` | |
-| **F. Relecture / tests** | relire les PR, tester des parties complètes, Javadoc | tous | |
-
-Les parties dépendent les unes des autres (D a besoin de A, B et C). Les signatures des méthodes sont déjà fixées dans le squelette : **ne les changez pas sans prévenir le groupe**, comme ça chacun peut avancer en parallèle.
+Chaque tâche correspond à des `TODO` dans le code (cherchez `TODO 1.3`, `TODO 2.1`…). Les signatures des méthodes sont déjà fixées dans le squelette : **ne les changez pas sans prévenir le groupe**, comme ça chacun peut avancer en parallèle.
 
 ## Règles Git
 
