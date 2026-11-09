@@ -33,20 +33,30 @@ public abstract class Achetable extends Case {
 
     /**
      * Fait de {@code acheteur} le propriétaire de la case.
+     * L'achat est ignoré si la case est déjà occupée ou si {@code acheteur}
+     * n'a pas assez d'argent.
      *
      * @param acheteur joueur qui achète la case
      */
     public void acheter(Joueur acheteur) {
-        // TODO 1.1 : vérifier que la case est libre, débiter l'acheteur, changer le propriétaire
-        throw new UnsupportedOperationException("TODO 1.1 acheter()");
+        if (proprietaire != null) {
+            // La case est déjà occupée : l'achat est ignoré.
+            return;
+        }
+        try {
+            acheteur.payer(prix, acheteur);
+        } catch (NoMoreMoney e) {
+            // L'acheteur n'a pas assez d'argent : l'achat est refusé.
+            return;
+        }
+        this.proprietaire = acheteur;
     }
 
     /**
      * Remet la case sans propriétaire (utilisé lors de l'élimination d'un joueur, 4.3).
      */
     public void liberer() {
-        // TODO 4.3 : retirer le propriétaire (Constructible retirera aussi ses maisons/hôtels)
-        throw new UnsupportedOperationException("TODO 4.3 liberer()");
+        this.proprietaire = null;
     }
 
     /**
@@ -67,3 +77,5 @@ public abstract class Achetable extends Case {
         return nom + " (coût : " + prix + ")";
     }
 }
+
+

@@ -1,5 +1,4 @@
-package edu.centralenantes.tp1.medev;
-
+package fr.ecn.medev.monopoly;
 /**
  * Case constructible : on peut y construire des maisons puis un hotel.
  */
