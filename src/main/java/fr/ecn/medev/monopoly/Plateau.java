@@ -1,7 +1,6 @@
 package fr.ecn.medev.monopoly;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
  * Plateau de 40 cases et liste des joueurs en jeu.
@@ -13,13 +12,20 @@ public class Plateau {
     /** Nombre de cases du plateau. */
     public static final int NB_CASES = 40;
 
-    private final ArrayList<Case> plateau;
-    private final LinkedList<Joueur> joueurs;
+    private final ArrayList<Case> cases;
+    private final ArrayList<Joueur> joueurs;
 
     /** Nombre maximal de tours complets (strictement positif). */
     private final int limiteTours;
     /** Nombre de tours complets déjà joués. */
     private int nbToursJoues;
+
+    /**
+     * Crée un plateau avec la limite de tours par défaut.
+     */
+    public Plateau() {
+        this(50);
+    }
 
     /**
      * @param limiteTours nombre maximal de tours complets (doit être &gt; 0)
@@ -31,8 +37,8 @@ public class Plateau {
         }
         this.limiteTours = limiteTours;
         this.nbToursJoues = 0;
-        this.plateau = new ArrayList<>();
-        this.joueurs = new LinkedList<>();
+        this.cases = new ArrayList<>();
+        this.joueurs = new ArrayList<>();
         initPlateau();
     }
 
@@ -41,15 +47,27 @@ public class Plateau {
      */
     private void initPlateau() {
         // TODO 2 : créer les 40 cases (Départ, terrains, gares, prison, chance...)
-        plateau.add(new CaseSpeciale("Départ"));
+        cases.add(new CaseSpeciale("Départ"));
     }
 
     public ArrayList<Case> getCases() {
-        return plateau;
+        return cases;
     }
 
-    public LinkedList<Joueur> getJoueurs() {
+    public ArrayList<Joueur> getJoueurs() {
         return joueurs;
+    }
+
+    /**
+     * Ajoute un joueur à la partie.
+     *
+     * @param joueur joueur à ajouter
+     */
+    public void ajouterJoueur(Joueur joueur) {
+        if (joueur == null) {
+            throw new IllegalArgumentException("Le joueur ne peut pas être null");
+        }
+        joueurs.add(joueur);
     }
 
     /**
@@ -58,7 +76,27 @@ public class Plateau {
      * @param nom nom du joueur
      */
     public void ajouterJoueur(String nom) {
-        joueurs.add(new Joueur(nom, plateau.get(0), this));
+        ajouterJoueur(new Joueur(nom, cases.get(0), this));
+    }
+
+    /**
+     * Compte les cases achetables appartenant au joueur.
+     *
+     * @param joueur joueur dont on compte les propriétés
+     * @return nombre de cases achetables possédées par le joueur
+     */
+    public int nbCasesJoueur(Joueur joueur) {
+        if (joueur == null) {
+            throw new IllegalArgumentException("Le joueur ne peut pas être null");
+        }
+        int nombre = 0;
+        for (Case uneCase : cases) {
+            if (uneCase instanceof Achetable achetable
+                    && joueur.equals(achetable.getProprietaire())) {
+                nombre++;
+            }
+        }
+        return nombre;
     }
 
     /**
@@ -68,8 +106,13 @@ public class Plateau {
      * @return nombre de gares possédées
      */
     public int nbGares(Joueur j) {
-        // TODO 2.1
-        throw new UnsupportedOperationException("TODO 2.1 nbGares()");
+        int nombre = 0;
+        for (Case uneCase : cases) {
+            if (uneCase instanceof Gare gare && j.equals(gare.getProprietaire())) {
+                nombre++;
+            }
+        }
+        return nombre;
     }
 
     /**
@@ -77,9 +120,18 @@ public class Plateau {
      * puis les joueurs, leur fortune et leurs propriétés (4.2).
      */
     public void affiche() {
-        // TODO 2.2 puis 4.2
-        for (Case c : plateau) {
-            System.out.println(c);
+        for (int i = 0; i < cases.size(); i++) {
+            System.out.println(i + " : " + cases.get(i));
+        }
+        System.out.println("Joueurs :");
+        for (Joueur joueur : joueurs) {
+            System.out.println(joueur + " - position : " + joueur.getPosition());
+            for (Case uneCase : cases) {
+                if (uneCase instanceof Achetable achetable
+                        && joueur.equals(achetable.getProprietaire())) {
+                    System.out.println("  Propriété : " + uneCase);
+                }
+            }
         }
     }
 
@@ -91,8 +143,28 @@ public class Plateau {
      * @return la case d'arrivée
      */
     public Case avance(Case depart, int d) {
-        // TODO 2.3
-        throw new UnsupportedOperationException("TODO 2.3 avance()");
+        if (cases.isEmpty()) {
+            throw new IllegalStateException("Le plateau ne contient aucune case");
+        }
+        int position = cases.indexOf(depart);
+        if (position < 0) {
+            throw new IllegalArgumentException("La case de départ n'appartient pas à ce plateau");
+        }
+        int deplacement = Math.floorMod(d, cases.size());
+        return cases.get((position + deplacement) % cases.size());
+    }
+
+    /**
+     * Déplace un joueur du nombre de cases demandé, de façon circulaire.
+     *
+     * @param joueur joueur à déplacer
+     * @param nbCases nombre de cases à parcourir
+     */
+    public void avance(Joueur joueur, int nbCases) {
+        if (joueur == null) {
+            throw new IllegalArgumentException("Le joueur ne peut pas être null");
+        }
+        joueur.setPosition(avance(joueur.getPosition(), nbCases));
     }
 
     /**
