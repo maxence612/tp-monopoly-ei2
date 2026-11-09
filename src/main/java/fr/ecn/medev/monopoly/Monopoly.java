@@ -50,7 +50,7 @@ public class Monopoly {
             Joueur joueurActuel = plateau.getJoueurs().get(joueurEnCours);
             System.out.println("Tour " + (plateau.getNbToursJoues() + 1) + ", c'est au tour de " + joueurActuel.getNom() + " !");
             
-           joueurActuel.TourDeJeu();
+           joueurActuel.TourDeJeu(plateau);
            if (joueurActuel.getFortune() < 0) {
                 System.out.println(joueurActuel.getNom() + " est éliminé !");
                 plateau.supprmimerJoueur(joueurActuel);
