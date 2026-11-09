@@ -23,7 +23,7 @@ public class Gare extends Achetable {
         if (this.getProprietaire() == null || visiteur == this.getProprietaire()) {
             return 0;
         }
-        return this.getProprietaire().nbGares() * LOYER_PAR_GARE;
+        return this.getProprietaire().getNbGares() * LOYER_PAR_GARE;
     }
 }
 

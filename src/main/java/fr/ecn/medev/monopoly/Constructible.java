@@ -45,11 +45,14 @@ public class Constructible extends Achetable {
     /**
      * Loyer a payer : L0 + a * nombre de maisons + b * nombre d'hotels.
      */
-    public int loyer() {
+    public int calculLoyer(Joueur visiteur) {
+        if (this.getProprietaire() == null || visiteur == this.getProprietaire()) {
+            return 0;
+        }
         return loyerBase + a * nbMaison + b * nbHotel;
     }
     public void liberer(){
-        super();
+        super.liberer();
         nbMaison = 0;
         nbHotel = 0;
         

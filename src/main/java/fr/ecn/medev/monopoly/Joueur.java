@@ -1,4 +1,4 @@
-package edu.centralenantes.monopoly;
+package fr.ecn.medev.monopoly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,9 +65,9 @@ public class Joueur {
      * @param montant montant à payer
      * @throws NoMoreMoney si la fortune du joueur est inférieure au montant
      */
-    public void payer(Joueur destinataire, int montant) throws NoMoreMoney {
+    public void payer(Joueur destinataire, int montant) {
         if (this.fortune < montant) {
-            throw new NoMoreMoney("Crédit insuffisant pour " + this.nom);
+            throw new Error("Le joueur " + this.nom + " n'a pas assez d'argent pour payer " + montant + "$.");
         }
         this.fortune -= montant;
         if (destinataire != null) {
@@ -83,7 +83,7 @@ public class Joueur {
      * @throws NoMoreMoney si le joueur ne dispose pas de la fortune suffisante
      *                     pour payer le loyer de la case possédée
      */
-    public void tourDeJeu(Plateau plateau) throws NoMoreMoney {
+    public void tourDeJeu(Plateau plateau) {
         int de = lanceLeDe();
         int nouvellePosition = plateau.avance(this.position, de);
         System.out.println("avance de "+de+" cases");

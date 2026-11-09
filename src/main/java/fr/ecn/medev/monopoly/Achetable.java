@@ -30,6 +30,9 @@ public abstract class Achetable extends Case {
     public Joueur getProprietaire() {
         return proprietaire;
     }
+    public void setProprietaire(Joueur proprietaire) {
+        this.proprietaire = proprietaire;
+    }
 
     /**
      * Fait de {@code acheteur} le propriétaire de la case.
@@ -44,8 +47,10 @@ public abstract class Achetable extends Case {
             return;
         }
         try {
-            acheteur.payer(prix, acheteur);
-        } catch (NoMoreMoney e) {
+            System.out.println(acheteur.getNom() + " achète " + nom + " pour " + prix + "$.");
+            System.out.println("A implémenter...");
+            //acheteur.paiement(prix);
+        } catch (Exception e) {
             // L'acheteur n'a pas assez d'argent : l'achat est refusé.
             return;
         }
